@@ -1,137 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - UMP Job Connect</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <script>
-    function toggleForm() {
-      const userType = document.getElementById('userType').value;
-      document.getElementById('studentForm').style.display = userType === 'student' ? 'block' : 'none';
-      document.getElementById('facultyForm').style.display = userType === 'faculty' ? 'block' : 'none';
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMP Job Connect - Register</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom font import and styling */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e0e7ff; }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3730a3; }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ump-primary': '#4f46e5',
+                        'ump-dark': '#1e3a8a',
+                        'ump-accent': '#f59e0b',
+                    }
+                }
+            }
+        }
+        
+        // --- Client-side logic for toggling Student/Faculty forms ---
+        function toggleForm() {
+            const userType = document.getElementById('userType').value;
+            document.getElementById('studentForm').classList.toggle('hidden', userType !== 'student');
+            document.getElementById('facultyForm').classList.toggle('hidden', userType !== 'faculty');
+
+            // Set the correct action URL based on the selected type
+            document.getElementById('studentFormActual').action = userType === 'student' ? '/auth/register/student' : '#';
+            document.getElementById('facultyFormActual').action = userType === 'faculty' ? '/auth/register/faculty' : '#';
+        }
+
+        // The client-side JavaScript simulation for form submission has been REMOVED.
+        // Forms will now submit directly to the server.
+
+        window.onload = function() {
+            // Ensure the correct form is visible on load
+            toggleForm();
+            lucide.createIcons();
+        }
+    </script>
 </head>
-<body>
-  <nav>
-    <div class="container">
-      <a href="/" class="logo">UMP Job Connect</a>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/jobs">Browse Jobs</a></li>
-        <li><a href="/auth/login">Login</a></li>
-      </ul>
-    </div>
-  </nav>
+<body class="min-h-screen flex flex-col">
 
-  <main>
-    <div class="container">
-      <div class="card" style="max-width: 600px; margin: 2rem auto;">
-        <h2>Register</h2>
+    <!-- Navigation Bar -->
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2 text-xl font-extrabold text-ump-dark tracking-tight">
+                    <i data-lucide="briefcase-business" class="w-6 h-6 text-ump-primary"></i>
+                    <span>UMP Job Connect</span>
+                </a>
 
-        <% if (error) { %>
-          <div class="alert alert-error"><%= error %></div>
-        <% } %>
-
-        <div class="form-group">
-          <label>Register as:</label>
-          <select id="userType" onchange="toggleForm()">
-            <option value="student">Student</option>
-            <option value="faculty">Faculty Admin</option>
-          </select>
+                <!-- Nav Links -->
+                <nav class="flex items-center space-x-6">
+                    <a href="/auth/login" class="text-gray-600 text-sm nav-link hover:text-ump-accent transition duration-150" id="nav-login">
+                        Login
+                    </a>
+                    <!-- Current Page is Register -->
+                    <a href="/auth/register" class="text-ump-accent text-sm nav-link font-bold border-b-2 border-ump-accent transition duration-150" id="nav-register">
+                        Register
+                    </a>
+                </nav>
+            </div>
         </div>
+    </header>
 
-        <!-- Student Registration Form -->
-        <div id="studentForm">
-          <form action="/auth/register/student" method="POST">
-            <div class="form-group">
-              <label>Student Number (9 digits):</label>
-              <input type="text" name="student_number" pattern="\d{9}" required>
+    <!-- Main Content Area (Register View) -->
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-xl">
+            <div class="bg-white p-8 md:p-10 rounded-xl shadow-2xl">
+                <h2 class="text-3xl font-bold text-ump-dark mb-6 border-b-2 border-ump-accent pb-2">Create Account</h2>
+                <p class="text-gray-600 mb-6">Join the UMP Job Connect platform today.</p>
+
+                <!-- EJS Error Display Logic (Receives errors from your auth.js router) -->
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="p-4 mb-4 text-sm font-medium text-red-800 bg-red-100 rounded-lg shadow-sm border border-red-300 flex items-center" role="alert">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 mr-2"></i>
+                        <%= error %>
+                    </div>
+                <% } %>
+                <!-- End EJS Error Display Logic -->
+
+                <!-- User Type Selector for Registration -->
+                <div class="mb-6">
+                    <label for="userType" class="block text-base font-semibold text-gray-700 mb-2">Register as:</label>
+                    <select id="userType" name="userType" onchange="toggleForm()"
+                        class="block w-full pl-3 pr-10 py-3 text-lg border-gray-300 focus:outline-none focus:ring-ump-primary focus:border-ump-primary rounded-lg shadow-md transition duration-150 ease-in-out bg-white border cursor-pointer">
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty Admin</option>
+                    </select>
+                </div>
+
+                <!-- ------------------------------------------------ -->
+                <!-- STUDENT Registration Form -->
+                <!-- ------------------------------------------------ -->
+                <div id="studentForm">
+                    <form id="studentFormActual" action="/auth/register/student" method="POST" class="space-y-5">
+                        <h3 class="text-xl font-semibold text-ump-primary border-b border-indigo-200 pb-2">Student Details</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">First Name:</label>
+                                <input type="text" name="first_name" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name:</label>
+                                <input type="text" name="last_name" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Student Number (9 digits):</label>
+                            <input type="text" name="student_number" pattern="\d{9}" required placeholder="e.g., 220012345"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                            <input type="email" name="email" required placeholder="student@ump.ac.za"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Password (min 6 chars):</label>
+                            <input type="password" name="password" minlength="6" required placeholder="••••••••"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                        </div>
+
+                        <button type="submit"
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out transform hover:scale-[1.01]">
+                            <i data-lucide="user-plus" class="w-5 h-5 mr-2"></i>
+                            Register as Student
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ------------------------------------------------ -->
+                <!-- FACULTY Registration Form -->
+                <!-- ------------------------------------------------ -->
+                <div id="facultyForm" class="hidden">
+                    <form id="facultyFormActual" action="/auth/register/faculty" method="POST" class="space-y-5">
+                        <h3 class="text-xl font-semibold text-ump-primary border-b border-indigo-200 pb-2">Faculty Admin Details</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">First Name:</label>
+                                <input type="text" name="first_name" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name:</label>
+                                <input type="text" name="last_name" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Staff Number:</label>
+                            <input type="text" name="staff_number" required placeholder="e.g., SA10098"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                            <input type="email" name="email" required placeholder="admin@ump.ac.za"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Faculty:</label>
+                            <select name="faculty" required
+                                class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150 bg-white">
+                                <option value="">Select Faculty</option>
+                                <option value="Faculty of Agriculture and Environmental Sciences">Agriculture and Natural Sciences</option>
+                                <option value="Development, Economics and Management Sciences">Development, Economics and Management Sciences</option>
+                                <option value="Faculty of Education">Education</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone:</label>
+                            <input type="tel" name="phone" placeholder="Optional"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Password (min 6 chars):</label>
+                            <input type="password" name="password" minlength="6" required placeholder="••••••••"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-ump-primary focus:border-ump-primary transition duration-150">
+                        </div>
+
+                        <button type="submit"
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-ump-accent hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ump-accent transition duration-150 ease-in-out transform hover:scale-[1.01]">
+                            <i data-lucide="lock-open" class="w-5 h-5 mr-2"></i>
+                            Register as Faculty
+                        </button>
+                    </form>
+                </div>
+
+                <p class="mt-6 text-center text-sm text-gray-600">
+                    Already have an account?
+                    <a href="/auth/login" class="font-semibold text-ump-primary hover:text-indigo-700 transition duration-150">
+                        Login here
+                    </a>
+                </p>
             </div>
-
-            <div class="form-group">
-              <label>Email:</label>
-              <input type="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-              <label>First Name:</label>
-              <input type="text" name="first_name" required>
-            </div>
-
-            <div class="form-group">
-              <label>Last Name:</label>
-              <input type="text" name="last_name" required>
-            </div>
-
-            <div class="form-group">
-              <label>Password:</label>
-              <input type="password" name="password" minlength="6" required>
-            </div>
-
-            <button type="submit" class="btn">Register as Student</button>
-          </form>
         </div>
+    </main>
 
-        <!-- Faculty Registration Form -->
-        <div id="facultyForm" style="display: none;">
-          <form action="/auth/register/faculty" method="POST">
-            <div class="form-group">
-              <label>Staff Number:</label>
-              <input type="text" name="staff_number" required>
-            </div>
-
-            <div class="form-group">
-              <label>Email:</label>
-              <input type="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-              <label>First Name:</label>
-              <input type="text" name="first_name" required>
-            </div>
-
-            <div class="form-group">
-              <label>Last Name:</label>
-              <input type="text" name="last_name" required>
-            </div>
-
-            <div class="form-group">
-              <label>Faculty:</label>
-              <select name="faculty" required>
-                <option value="">Select Faculty</option>
-                <option value="Faculty of Agriculture and Environmental Sciences">Agriculture and Environmental Sciences</option>
-                <option value="Faculty of Economics and Management Sciences">Economics and Management Sciences</option>
-                <option value="Faculty of Education">Education</option>
-                <option value="Faculty of Humanities">Humanities</option>
-                <option value="Faculty of Science and Technology">Science and Technology</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Phone:</label>
-              <input type="tel" name="phone">
-            </div>
-
-            <div class="form-group">
-              <label>Password:</label>
-              <input type="password" name="password" minlength="6" required>
-            </div>
-
-            <button type="submit" class="btn">Register as Faculty</button>
-          </form>
+    <!-- Footer -->
+    <footer class="bg-ump-dark mt-auto">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center">
+            <p class="text-sm text-indigo-200">&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
         </div>
-
-        <p style="margin-top: 1rem;">Already have an account? <a href="/auth/login">Login here</a></p>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
-    </div>
-  </footer>
+    </footer>
 </body>
 </html>

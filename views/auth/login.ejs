@@ -1,63 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - UMP Job Connect</title>
-  <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMP Job Connect - Login</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom font import and styling */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e0e7ff; }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3730a3; }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ump-primary': '#4f46e5',
+                        'ump-dark': '#1e3a8a',
+                        'ump-accent': '#f59e0b',
+                    }
+                }
+            }
+        }
+        
+        // The client-side JavaScript simulation for form submission has been REMOVED.
+        // The form will now submit directly to the server, allowing Express to handle 
+        // authentication and redirection.
+
+        window.onload = function() {
+            lucide.createIcons();
+        }
+    </script>
 </head>
-<body>
-  <nav>
-    <div class="container">
-      <a href="/" class="logo">UMP Job Connect</a>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/jobs">Browse Jobs</a></li>
-        <li><a href="/auth/register">Register</a></li>
-      </ul>
-    </div>
-  </nav>
+<body class="min-h-screen flex flex-col">
 
-  <main>
-    <div class="container">
-      <div class="card" style="max-width: 500px; margin: 2rem auto;">
-        <h2>Login</h2>
+    <!-- Navigation Bar -->
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2 text-xl font-extrabold text-ump-dark tracking-tight">
+                    <i data-lucide="briefcase-business" class="w-6 h-6 text-ump-primary"></i>
+                    <span>UMP Job Connect</span>
+                </a>
 
-        <% if (error) { %>
-          <div class="alert alert-error"><%= error %></div>
-        <% } %>
+                <!-- Nav Links -->
+                <nav class="flex items-center space-x-6">
+                    <!-- Current Page is Login -->
+                    <a href="/auth/login" class="text-ump-accent text-sm nav-link font-bold border-b-2 border-ump-accent transition duration-150" id="nav-login">
+                        Login
+                    </a>
+                    <a href="/auth/register" class="text-gray-600 text-sm nav-link hover:text-ump-accent transition duration-150" id="nav-register">
+                        Register
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-        <form action="/auth/login" method="POST">
-          <div class="form-group">
-            <label>Login as:</label>
-            <select name="userType" required>
-              <option value="student">Student</option>
-              <option value="faculty">Faculty Admin</option>
-            </select>
-          </div>
+    <!-- Main Content Area (Login View) -->
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-xl">
+            <div class="bg-white p-8 md:p-10 rounded-xl shadow-2xl">
+                <h2 class="text-3xl font-bold text-ump-dark mb-6 border-b-2 border-ump-accent pb-2">Welcome Back!</h2>
+                <p class="text-gray-600 mb-8">Sign in to access your jobs or student/faculty dashboard.</p>
 
-          <div class="form-group">
-            <label>Email:</label>
-            <input type="email" name="email" required>
-          </div>
+                <!-- EJS Error Display Logic (Receives errors from your auth.js router) -->
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="p-4 mb-4 text-sm font-medium text-red-800 bg-red-100 rounded-lg shadow-sm border border-red-300 flex items-center" role="alert">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 mr-2"></i>
+                        <%= error %>
+                    </div>
+                <% } %>
+                <!-- End EJS Error Display Logic -->
 
-          <div class="form-group">
-            <label>Password:</label>
-            <input type="password" name="password" required>
-          </div>
+                <!-- Form submits directly to router.post('/login') -->
+                <form id="loginForm" action="/auth/login" method="POST" class="space-y-6">
+                    <!-- User Type Selection -->
+                    <div>
+                        <label for="loginUserType" class="block text-sm font-medium text-gray-700 mb-1">Login as:</label>
+                        <select id="loginUserType" name="userType" required
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-ump-primary focus:border-ump-primary sm:text-sm rounded-lg shadow-sm transition duration-150 ease-in-out bg-gray-50 border">
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty Admin</option>
+                        </select>
+                    </div>
 
-          <button type="submit" class="btn">Login</button>
-        </form>
+                    <!-- Email Input -->
+                    <div>
+                        <label for="loginEmail" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                        <input type="email" id="loginEmail" name="email" required placeholder="name@ump.ac.za"
+                            class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-ump-primary focus:border-ump-primary sm:text-sm transition duration-150">
+                    </div>
 
-        <p style="margin-top: 1rem;">Don't have an account? <a href="/auth/register">Register here</a></p>
-      </div>
-    </div>
-  </main>
+                    <!-- Password Input -->
+                    <div>
+                        <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
+                        <input type="password" id="loginPassword" name="password" required placeholder="••••••••"
+                            class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-ump-primary focus:border-ump-primary sm:text-sm transition duration-150">
+                    </div>
 
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
-    </div>
-  </footer>
+                    <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-ump-primary hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ump-primary transition duration-150 ease-in-out transform hover:scale-[1.01]">
+                        <i data-lucide="log-in" class="w-5 h-5 mr-2"></i>
+                        Login
+                    </button>
+                </form>
+
+                <p class="mt-6 text-center text-sm text-gray-600">
+                    Don't have an account?
+                    <a href="/auth/register" class="font-semibold text-ump-primary hover:text-indigo-700 transition duration-150">
+                        Register here
+                    </a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-ump-dark mt-auto">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center">
+            <p class="text-sm text-indigo-200">&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

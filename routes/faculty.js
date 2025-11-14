@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const nodemailer = require('nodemailer');
 const db = require('../database/init');
 
 // Middleware to check if user is faculty
@@ -25,6 +26,14 @@ router.get('/dashboard', isFaculty, (req, res) => {
       res.render('faculty/dashboard', { jobs });
     }
   );
+});
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // or another SMTP provider
+  auth: {
+    user: 'thobejanetheo@gmail.com',
+    pass: 'ypue gyqz szbu vjen',
+  }
 });
 
 // Create job post page
@@ -108,7 +117,7 @@ router.post('/jobs/delete/:id', isFaculty, (req, res) => {
 router.get('/jobs/:id/applicants', isFaculty, (req, res) => {
   const jobId = req.params.id;
   const facultyId = req.session.user.id;
-
+  
   // First verify this job belongs to this faculty member
   db.get(
     'SELECT * FROM job_posts WHERE id = ? AND faculty_admin_id = ?',
@@ -141,22 +150,60 @@ router.get('/jobs/:id/applicants', isFaculty, (req, res) => {
 
 
 // Update application status
+// Update application status and email applicant
 router.post('/applications/:id/status', isFaculty, (req, res) => {
   const applicationId = req.params.id;
   const { status } = req.body;
-  const jobId = req.params.id;
 
+  // 1. Update status in DB as before
   db.run(
     'UPDATE applications SET status = ? WHERE id = ?',
-    [status, applicationId, jobId],
+    [status, applicationId],
     function(err) {
       if (err) {
         return res.status(500).send('Error updating status');
       }
-      res.redirect(`/faculty/jobs/${jobId}/applicants`);
+
+      // 2. Get student's email address and job title for email content
+      db.get(
+        `SELECT s.email, s.first_name, s.last_name, j.job_title
+         FROM applications a
+         JOIN students s ON a.student_id = s.id
+         JOIN job_posts j ON a.job_post_id = j.id
+         WHERE a.id = ?`,
+        [applicationId],
+        (err, row) => {
+          // Proceed even if error (email is just a notification)
+          if (!err && row) {
+            // Compose email
+            let subject = `Update on Your Job Application: ${row.job_title}`;
+            let message = `Dear ${row.first_name} ${row.last_name},\n\nYour application status for "${row.job_title}" has been updated to: ${status.toUpperCase()}.\n\nIf you have any questions, please reply to this email or contact the Career Services office.\n\nBest regards,\nUniversity of Mpumalanga Job Connect Team`;
+
+            // Send email notification
+            transporter.sendMail({
+              from: '"UMP Job Connect" <your-email@gmail.com>',
+              to: row.email,
+              subject: subject,
+              text: message
+            }, (mailErr, info) => {
+              if (mailErr) {
+                console.error('Email not sent:', mailErr);
+              } else {
+                console.log('Notification email sent:', info.response);
+              }
+            });
+          }
+
+          // Respond/redirect user to previous page
+          const referer = req.headers.referer || '/faculty/dashboard';
+          res.redirect(referer);
+        }
+      );
     }
   );
 });
+
+
 
 // View individual applicant details
 router.get('/applicants/:applicationId/details', isFaculty, (req, res) => {
