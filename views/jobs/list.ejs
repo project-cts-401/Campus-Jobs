@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>job-connect | all jobs.</title>
+    <link rel="stylesheet" href="/jobs/css/job-table-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/img/favicon.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="/css/jobs_list.css">
+    <link rel="stylesheet" href="/css/home_page.css">
+    <style>
+        /* Basic placeholder styling - move to job-table-style.css */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .breadcrumb-placeholder {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .tabs-container {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .tab {
+            display: inline-block;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background-color: #f8f8f8;
+            color: #337ab7;
+            cursor: pointer;
+            margin-right: 3px;
+            margin-bottom: -1px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .page-wrapper {
+            color: #333;
+        }
+        
+        .hero-title {
+            font-size: 20px;
+        }
+        
+        font .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+        
+        .pagination-links button,
+        .pagination-links span {
+            padding: 5px 8px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            margin: 0 2px;
+            cursor: pointer;
+        }
+        
+        .pagination-links button:disabled {
+            background-color: #eee;
+            cursor: default;
+        }
+        
+        .pagination-links span.current-page {
+            font-weight: bold;
+            background-color: #eee;
+        }
+        
+        .results-count span {
+            margin-right: 5px;
+        }
+        
+        .results-count select {
+            border-radius: 5px;
+        }
+        
+        results-count .results-count select {
+            padding: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        .hero-form-wrapper button {
+            transition: all 0.358s ease-in-out;
+            gap: 0.5rem;
+            font-weight: 100;
+        }
+        
+        .hero-form-wrapper button:hover {
+            font-size: 2.2rem;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .breadcrumb-placeholder {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .tabs-container {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .tab {
+            display: inline-block;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background-color: #f8f8f8;
+            color: #337ab7;
+            cursor: pointer;
+            margin-right: 3px;
+            margin-bottom: -1px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .page-wrapper {
+            color: #333;
+            padding: 20px;
+        }
+        
+        .hero-title {
+            font-size: 20px;
+        }
+        
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+        
+        .pagination-links button,
+        .pagination-links span {
+            padding: 5px 8px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            margin: 0 2px;
+            cursor: pointer;
+        }
+        
+        .pagination-links button:disabled {
+            background-color: #eee;
+            cursor: default;
+        }
+        
+        .pagination-links span.current-page {
+            font-weight: bold;
+            background-color: #eee;
+        }
+        
+        .results-count span {
+            margin-right: 5px;
+        }
+        
+        .results-count select {
+            border-radius: 5px;
+            padding: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        .hero-form-wrapper button {
+            transition: all 0.358s ease-in-out;
+            gap: 0.5rem;
+            font-weight: 100;
+        }
+        
+        .hero-form-wrapper button:hover {
+            font-size: 2.2rem;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .page-header {
+            margin-bottom: 20px;
+        }
+        
+        .jobs-content {
+            margin-top: 20px;
+        }
+        
+        .footer-info {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .no-jobs {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header" data-header>
+        <div class="container">
+            <a href="#" class="logo">
+                <ion-icon name="business-outline"></ion-icon><i class="fa-solid fa-briefcase"></i> All Jobs
+            </a>
+            <nav class="navbar container" data-navbar>
+                <ul class="navbar-list">
+                    <li>
+                        <a href="/" class="navbar-link" data-nav-link>Home</a>
+                    </li>
+                    <li>
+                        <a href="/AboutUs" class="navbar-link" data-nav-link>About Us</a>
+                    </li>
+                    <li>
+                        <a href="/ContactUs" class="navbar-link" data-nav-link>Contact Us</a>
+                    </li>
+                    <li>
+                        <a href="/jobs" class="navbar-link" data-nav-link style="color: hsl(194, 100%, 28%);">Jobs</a>
+                    </li>
+                    <% if (user) { %>
+                    <% if (userType === 'student') { %>
+                            <li><a href="/applications/my" class="navbar-link" data-nav-link>My Applications</a></li>
+                            <li><a href="/student/profile" class="navbar-link" data-nav-link>Profile</a></li>
+                        <% } else if (userType === 'faculty') { %>
+                            <li><a href="/admin/jobs" class="navbar-link" data-nav-link>My Postings</a></li>
+                            <li><a href="/admin/jobs/new" class="navbar-link" data-nav-link>Post New Job</a></li>
+                        <% } %>
+                    <% } %>
+                </ul>
+            </nav>
+            <% if (user) { %>
+                <a href="/auth/logout" class="btn btn-secondary">Logout</a>
+            <% } else { %>
+                <a class="btn btn-secondary" href="/auth/login">Login</a>
+            <% } %>
+            <button class="nav-toggle-btn" aria-label="Toggle menu" data-nav-toggler>
+                <ion-icon name="menu-outline" aria-hidden="true" class="menu-icon"></ion-icon>
+                <ion-icon name="close-outline" aria-hidden="true" class="close-icon"></ion-icon>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <article class="article">
+            <section class="section hero" aria-label="hero">
+                <div class="container">
+                    <div class="hero-bg">
+                        <div class="hero-content">
+                            <!-- Hero content if needed -->
+                        </div>
+                    </div>
+
+                    <div class="hero-form-wrapper">
+                        <form class="hero-form" action="/jobs" method="GET">
+                            <div class="input-wrapper">
+                                <label for="search" class="input-label">Job title:</label>
+                                <input type="search" name="search" id="search" placeholder="Search by title" class="input-field" value="<%= search %>">
+                                <ion-icon name="search-outline"></ion-icon>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="category" class="input-label">Select job type:</label>
+                                <select name="category" id="category" class="dropdown-list">
+                                    <option value="">All Job Types</option>
+                                    <option value="Tutor" <%= category === 'Tutor' ? 'selected' : '' %>>Tutor</option>
+                                    <option value="Mentor" <%= category === 'Mentor' ? 'selected' : '' %>>Mentor</option>
+                                    <option value="Technician" <%= category === 'Technician' ? 'selected' : '' %>>Technician</option>
+                                    <option value="Research Assistant" <%= category === 'Research Assistant' ? 'selected' : '' %>>Research Assistant</option>
+                                    <option value="Admin Assistant" <%= category === 'Admin Assistant' ? 'selected' : '' %>>Admin Assistant</option>
+                                    <option value="Other" <%= category === 'Other' ? 'selected' : '' %>>Other</option>
+                                </select>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="department" class="input-label">Filter by Faculty:</label>
+                                <select name="department" id="department" class="dropdown-list">
+                                    <option value="">All Departments/Faculties</option>
+                                    <option value="Computer Science" <%= department === 'Computer Science' ? 'selected' : '' %>>Computer Science</option>
+                                    <option value="Library Services / IT Support" <%= department === 'Library Services / IT Support' ? 'selected' : '' %>>Library Services / IT Support</option>
+                                    <option value="Faculty of Engineering / Student Affairs" <%= department === 'Faculty of Engineering / Student Affairs' ? 'selected' : '' %>>Faculty of Engineering / Student Affairs</option>
+                                    <option value="Agriculture" <%= department === 'Agriculture' ? 'selected' : '' %>>Agriculture</option>
+                                    <option value="Sociology" <%= department === 'Sociology' ? 'selected' : '' %>>Sociology</option>
+                                    <option value="Development" <%= department === 'Development' ? 'selected' : '' %>>Development</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="background: none; display: flex; align-items: center; justify-content: center;">
+                                <p style="color: #333;">Search </p><i class="fa-solid fa-magnifying-glass" style="color: #333;"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <div class="page-wrapper">
+        <div class="breadcrumb-placeholder">
+            <!-- Breadcrumb content if needed -->
+        </div>
+
+        <div class="page-header">
+            <h1>View All Jobs</h1>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tab">Quick Job Search</div>
+            <div class="tab active">All Jobs</div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls">
+            <div class="results-count">
+                <% if (totalJobs > 0) { %>
+                    <% 
+                    const startItem = Math.min((currentPage - 1) * limit + 1, totalJobs);
+                    const endItem = Math.min(currentPage * limit, totalJobs);
+                    %>
+                    <span>Displaying <%= startItem %> - <%= endItem %> of <%= totalJobs %></span>
+                    <form method="GET" style="display: inline;">
+                        <input type="hidden" name="search" value="<%= search %>">
+                        <input type="hidden" name="category" value="<%= category %>">
+                        <input type="hidden" name="department" value="<%= department %>">
+                        <label for="limit">Show: </label>
+                        <select name="limit" id="limit" onchange="this.form.submit()">
+                            <option value="10" <%= limit === 10 ? 'selected' : '' %>>10</option>
+                            <option value="25" <%= limit === 25 ? 'selected' : '' %>>25</option>
+                            <option value="50" <%= limit === 50 ? 'selected' : '' %>>50</option>
+                            <option value="100" <%= limit === 100 ? 'selected' : '' %>>100</option>
+                        </select>
+                    </form>
+                <% } else { %>
+                    <span>Displaying 0 - 0 of 0</span>
+                <% } %>
+            </div>
+
+            <div class="pagination-links">
+                <% if (totalPages > 1) { %>
+                    <nav aria-label="Job results pagination">
+                        <ul style="display: flex; list-style: none; gap: 5px;">
+                            <!-- First Page Link -->
+                            <li>
+                                <% if (currentPage > 1) { %>
+                                    <a href="/jobs?<%= buildQueryString({ page: 1 }) %>" title="First Page">&lt;&lt;</a>
+                                <% } else { %>
+                                    <span class="disabled">&lt;&lt;</span>
+                                <% } %>
+                            </li>
+
+                            <!-- Previous Page Link -->
+                            <li>
+                                <% if (currentPage > 1) { %>
+                                    <a href="/jobs?<%= buildQueryString({ page: currentPage - 1 }) %>" title="Previous Page">&lt;</a>
+                                <% } else { %>
+                                    <span class="disabled">&lt;</span>
+                                <% } %>
+                            </li>
+
+                            <!-- Page Number Links -->
+                            <% for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) { %>
+                                <li>
+                                    <% if (i === currentPage) { %>
+                                        <span class="current-page"><%= i %></span>
+                                    <% } else { %>
+                                        <a href="/jobs?<%= buildQueryString({ page: i }) %>"><%= i %></a>
+                                    <% } %>
+                                </li>
+                            <% } %>
+
+                            <!-- Next Page Link -->
+                            <li>
+                                <% if (currentPage < totalPages) { %>
+                                    <a href="/jobs?<%= buildQueryString({ page: currentPage + 1 }) %>" title="Next Page">&gt;</a>
+                                <% } else { %>
+                                    <span class="disabled">&gt;</span>
+                                <% } %>
+                            </li>
+
+                            <!-- Last Page Link -->
+                            <li>
+                                <% if (currentPage < totalPages) { %>
+                                    <a href="/jobs?<%= buildQueryString({ page: totalPages }) %>" title="Last Page">&gt;&gt;</a>
+                                <% } else { %>
+                                    <span class="disabled">&gt;&gt;</span>
+                                <% } %>
+                            </li>
+                        </ul>
+                    </nav>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="jobs-content">
+            <h2>Jobs</h2>
+
+            <% if (error) { %>
+                <p class="no-jobs error-message">
+                    <%= error %>
+                </p>
+            <% } %>
+
+            <% if (jobs && jobs.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="job-table-screenshot">
+                        <thead>
+                            <tr>
+                                <th>JOB ID </th>
+                                <th>JOB TITLE</th>
+                                <th>FACULTY</th>
+                                <th>DATE POSTED</th>
+                                <th>ADVERT CLOSING DATE</th>
+                                <th>ADVERT STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% jobs.forEach(job => { %>
+                                <tr>
+                                    <td><%= job.id %></td>
+                                    
+                                    <td>
+                                        <a href="/jobs/<%= job.id %>">
+                                            <%= job.job_title %>
+                                        </a>
+                                    </td>
+                                    <td> <a href="/jobs?search=&category=&department=<%= job.faculty || 'N/A' %>"><%= job.faculty || 'N/A' %></a></td>
+                                    <td><%= new Date(job.date_posted).toLocaleDateString() %></td>
+                                    <td>
+                                        <% if(job.application_deadline) { %>
+                                            <%= new Date(job.application_deadline).toLocaleDateString() %>
+                                        <% } else { %>
+                                            N/A
+                                        <% } %>
+                                    </td>
+                                    <td>OPENED</td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else if (!error) { %>
+                <p class="no-jobs">No open job positions available matching your criteria.</p>
+            <% } %>
+        </div>
+
+        <!-- <div class="footer-info">
+            APP V7.40.1.3 <br> Last date:
+            <%= new Date().toLocaleDateString() %>
+            <%= new Date().toLocaleTimeString() %>
+        </div> -->
+    </div>
+
+    <!-- Footer -->
+    
+    
+    <a href="#" class="back-to-top-screenshot" aria-label="Back to top">&uarr;</a>
+    <script src="/home/assets/js/script.js" defer></script>
+    <script src="/jobs/js/job-table-script.js"></script>
+</body>
+
+</html>

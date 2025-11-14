@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applicant Details - UMP Job Connect</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .detail-section {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .detail-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .detail-value {
+      color: #555;
+    }
+    .document-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .document-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    .document-link:hover {
+      background: #2980b9;
+    }
+    .document-missing {
+      color: #e74c3c;
+      font-style: italic;
+    }
+    .status-update-section {
+      background: #fff3cd;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 2px solid #ffc107;
+    }
+    .transcript-section {
+      background: #e8f4f8;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #3498db;
+    }
+    .average-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #3498db;
+      color: white;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .average-badge.high {
+      background: #2ecc71;
+    }
+    .average-badge.medium {
+      background: #f39c12;
+    }
+    .average-badge.low {
+      background: #e74c3c;
+    }
+    .subjects-table {
+      width: 100%;
+      margin-top: 1rem;
+      border-collapse: collapse;
+    }
+    .subjects-table thead {
+      background: #2c3e50;
+      color: white;
+    }
+    .subjects-table th, .subjects-table td {
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .subjects-table tbody tr:hover {
+      background: #f0f8ff;
+    }
+    @media (max-width: 768px) {
+      .detail-row {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">UMP Job Connect</a>
+      <ul>
+        <li><a href="/faculty/dashboard">Dashboard</a></li>
+        <li><a href="/faculty/jobs/create">Post Job</a></li>
+        <li><a href="/faculty/profile">Profile</a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div style="margin-bottom: 2rem;">
+        <a href="/faculty/jobs/<%= applicant.job_post_id %>/applicants" class="btn btn-secondary">← Back to Applicants</a>
+      </div>
+
+      <h1>Applicant Details</h1>
+
+      <!-- Application Status Card -->
+      <div class="card">
+        <h2>Application Status</h2>
+        <div class="detail-section">
+          <div class="detail-row">
+            <span class="detail-label">Job Position:</span>
+            <span class="detail-value"><strong><%= applicant.job_title %></strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Job Faculty:</span>
+            <span class="detail-value"><%= applicant.job_faculty %></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Applied On:</span>
+            <span class="detail-value"><%= new Date(applicant.applied_at).toLocaleString() %></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Current Status:</span>
+            <span class="detail-value">
+              <span class="status status-<%= applicant.status %>"><%= applicant.status.toUpperCase() %></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Update Status -->
+        <div class="status-update-section">
+          <h3 style="margin-top: 0;">Update Application Status</h3>
+          <form action="/faculty/applications/<%= applicant.id %>/status" method="POST">
+            <div class="form-group">
+              <label>Change Status:</label>
+              <select name="status" required style="max-width: 300px;">
+                <option value="pending" <%= applicant.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="accepted" <%= applicant.status === 'accepted' ? 'selected' : '' %>>Accepted</option>
+                <option value="rejected" <%= applicant.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+              </select>
+            </div>
+            <button type="submit" class="btn">Update Status</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- TRANSCRIPT ANALYSIS SECTION - NEW -->
+      <% if (applicant.transcript_parsed) { %>
+        <div class="card">
+          <h2>Academic Performance (3rd Year Analysis)</h2>
+          <div class="transcript-section">
+            <div style="margin-bottom: 1.5rem;">
+              <p><strong>3rd Year Average:</strong></p>
+              <% 
+                let averageClass = 'high';
+                if (applicant.third_year_average < 60) averageClass = 'low';
+                else if (applicant.third_year_average < 70) averageClass = 'medium';
+              %>
+              <span class="average-badge <%= averageClass %>"><%= applicant.third_year_average %>%</span>
+            </div>
+
+            <% if (applicant.third_year_subjects) { %>
+              <div>
+                <h4>Subjects Taken (3rd Year):</h4>
+                <table class="subjects-table">
+                  <thead>
+                    <tr>
+                      <th>Subject Code</th>
+                      <th>Subject Name</th>
+                      <th>Mark</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% 
+                      try {
+                        const subjects = JSON.parse(applicant.third_year_subjects);
+                        subjects.forEach(subject => {
+                    %>
+                      <tr>
+                        <td><strong><%= subject.code %></strong></td>
+                        <td><%= subject.description %></td>
+                        <td><%= subject.mark %>%</td>
+                        <td>
+                          <% if (subject.mark >= 80) { %>
+                            <span class="status status-accepted">DISTINCTION</span>
+                          <% } else if (subject.mark >= 50) { %>
+                            <span class="status status-pending">PASS</span>
+                          <% } else { %>
+                            <span class="status status-rejected">FAIL</span>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% 
+                        });
+                      } catch (e) {
+                        console.error('Error parsing subjects:', e);
+                      }
+                    %>
+                  </tbody>
+                </table>
+              </div>
+            <% } %>
+          </div>
+
+          <div style="margin-top: 1rem; padding: 1rem; background: #d4edda; border-radius: 4px;">
+            <p style="margin: 0;"><strong>✓ Transcript successfully analyzed and 3rd year average calculated</strong></p>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="card">
+          <div style="padding: 1rem; background: #fff3cd; border-radius: 4px;">
+            <p style="margin: 0;"><strong>⚠ Transcript not yet analyzed</strong> - Upload was incomplete or parsing failed. Academic performance data is not available for this applicant.</p>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- Personal Information -->
+      <div class="card">
+        <h2>Personal Information</h2>
+        <div class="detail-section">
+          <div class="detail-row">
+            <span class="detail-label">Student Number:</span>
+            <span class="detail-value"><%= applicant.student_number %></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Full Name:</span>
+            <span class="detail-value"><%= applicant.first_name %> <%= applicant.last_name %></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value"><a href="mailto:<%= applicant.email %>"><%= applicant.email %></a></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Phone:</span>
+            <span class="detail-value">
+              <% if (applicant.phone) { %>
+                <a href="tel:<%= applicant.phone %>"><%= applicant.phone %></a>
+              <% } else { %>
+                <span class="document-missing">Not provided</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Profile Status:</span>
+            <span class="detail-value">
+              <% if (applicant.profile_complete) { %>
+                <span class="status status-accepted">Complete</span>
+              <% } else { %>
+                <span class="status status-pending">Incomplete</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Registered On:</span>
+            <span class="detail-value"><%= new Date(applicant.created_at).toLocaleDateString() %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emergency Contact Information -->
+      <div class="card">
+        <h2>Emergency Contact Information</h2>
+        <div class="detail-section">
+          <div class="detail-row">
+            <span class="detail-label">Contact Name:</span>
+            <span class="detail-value">
+              <% if (applicant.emergency_contact_name) { %>
+                <%= applicant.emergency_contact_name %>
+              <% } else { %>
+                <span class="document-missing">Not provided</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Contact Phone:</span>
+            <span class="detail-value">
+              <% if (applicant.emergency_contact_phone) { %>
+                <a href="tel:<%= applicant.emergency_contact_phone %>"><%= applicant.emergency_contact_phone %></a>
+              <% } else { %>
+                <span class="document-missing">Not provided</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Relationship:</span>
+            <span class="detail-value">
+              <% if (applicant.emergency_contact_relationship) { %>
+                <%= applicant.emergency_contact_relationship %>
+              <% } else { %>
+                <span class="document-missing">Not provided</span>
+              <% } %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="card">
+        <h2>Submitted Documents</h2>
+        <div class="detail-section">
+          <div class="detail-row">
+            <span class="detail-label">ID Document:</span>
+            <span class="detail-value">
+              <% if (applicant.id_document) { %>
+                <a href="/uploads/<%= applicant.id_document %>" target="_blank" class="document-link">📄 View ID Document</a>
+              <% } else { %>
+                <span class="document-missing">Not uploaded</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Proof of Tax:</span>
+            <span class="detail-value">
+              <% if (applicant.proof_of_tax) { %>
+                <a href="/uploads/<%= applicant.proof_of_tax %>" target="_blank" class="document-link">📄 View Tax Document</a>
+              <% } else { %>
+                <span class="document-missing">Not uploaded</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Proof of Bank:</span>
+            <span class="detail-value">
+              <% if (applicant.proof_of_bank) { %>
+                <a href="/uploads/<%= applicant.proof_of_bank %>" target="_blank" class="document-link">📄 View Bank Statement</a>
+              <% } else { %>
+                <span class="document-missing">Not uploaded</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Resume/CV:</span>
+            <span class="detail-value">
+              <% if (applicant.resume) { %>
+                <a href="/uploads/<%= applicant.resume %>" target="_blank" class="document-link">📄 View Resume</a>
+              <% } else { %>
+                <span class="document-missing">Not uploaded</span>
+              <% } %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Academic Transcript:</span>
+            <span class="detail-value">
+              <% if (applicant.academic_transcript) { %>
+                <a href="/uploads/<%= applicant.academic_transcript %>" target="_blank" class="document-link">📄 View Transcript</a>
+              <% } else { %>
+                <span class="document-missing">Not uploaded</span>
+              <% } %>
+            </span>
+          </div>
+        </div>
+
+        <% if (applicant.id_document && applicant.proof_of_tax && applicant.proof_of_bank && applicant.resume && applicant.academic_transcript) { %>
+          <div style="margin-top: 1rem;">
+            <div class="alert alert-success">✓ All required documents have been submitted</div>
+          </div>
+        <% } else { %>
+          <div style="margin-top: 1rem;">
+            <div class="alert alert-error">⚠️ Some documents are missing</div>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="card">
+        <h2>Actions</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="mailto:<%= applicant.email %>" class="btn">✉️ Email Applicant</a>
+          <% if (applicant.phone) { %>
+            <a href="tel:<%= applicant.phone %>" class="btn btn-secondary">📞 Call Applicant</a>
+          <% } %>
+          <a href="/faculty/jobs/<%= applicant.job_post_id %>/applicants" class="btn btn-secondary">← Back to All Applicants</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

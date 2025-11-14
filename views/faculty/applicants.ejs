@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applicants - UMP Job Connect</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">UMP Job Connect</a>
+      <ul>
+        <li><a href="/faculty/dashboard">Dashboard</a></li>
+        <li><a href="/faculty/jobs/create">Post Job</a></li>
+        <li><a href="/faculty/profile">Profile</a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <h1>Applicants for: <%= job.job_title %></h1>
+
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3>Job Details</h3>
+        <p><strong>Faculty:</strong> <%= job.faculty %></p>
+        <p><strong>Deadline:</strong> <%= new Date(job.application_deadline).toLocaleDateString() %></p>
+      </div>
+
+      <div class="card">
+        <h2>Applications (<%= applicants.length %>)</h2>
+
+        <% if (applicants.length === 0) { %>
+          <p>No applications yet for this job posting.</p>
+        <% } else { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Student Number</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Applied Date</th>
+                <th>Status</th>
+                <th>Documents</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% applicants.forEach(applicant => { %>
+                <tr>
+                  <td><%= applicant.student_number %></td>
+                  <td><%= applicant.first_name %> <%= applicant.last_name %></td>
+                  <td><%= applicant.email %></td>
+                  <td><%= new Date(applicant.applied_at).toLocaleDateString() %></td>
+                  <td>
+                    <span class="status status-<%= applicant.status %>"><%= applicant.status %></span>
+                  </td>
+                  <td>
+                    <% if (applicant.id_document) { %>
+                      <a href="/uploads/<%= applicant.id_document %>" target="_blank">ID</a> |
+                    <% } %>
+                    <% if (applicant.resume) { %>
+                      <a href="/uploads/<%= applicant.resume %>" target="_blank">Resume</a> |
+                    <% } %>
+                    <% if (applicant.academic_transcript) { %>
+                      <a href="/uploads/<%= applicant.academic_transcript %>" target="_blank">Transcript</a>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/faculty/applicants/<%= applicant.id %>/details" class="btn btn-small">View Details</a>
+                    <form action="/faculty/applications/<%= applicant.id %>/status" method="POST" style="display: inline;">
+                      <select name="status" onchange="this.form.submit()">
+                        <option value="pending" <%= applicant.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="accepted" <%= applicant.status === 'accepted' ? 'selected' : '' %>>Accepted</option>
+                        <option value="rejected" <%= applicant.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                      </select>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <a href="/faculty/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

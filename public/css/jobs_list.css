@@ -1,0 +1,253 @@
+/* Reset / Basic Body Styles */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    /* Generic sans-serif font */
+    font-size: 14px;
+    /* Adjust base size as needed */
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+/* Page Wrapper */
+
+.page-wrapper {
+    max-width: 1100px;
+    /* Adjust width as needed */
+    margin: 20px auto;
+    /* Center the content */
+    padding: 15px;
+}
+
+
+/* Page Header (Title + Button) */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    /* Subtle separator */
+    padding-bottom: 10px;
+}
+
+h1 {
+    font-size: 1.8em;
+    font-weight: normal;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    /* Separator above table */
+    padding-bottom: 5px;
+}
+
+
+/* Search Again Button */
+
+.search-again-btn {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    padding: 8px 15px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-again-btn:hover {
+    background-color: #eee;
+}
+
+
+/* Table Styling */
+
+.job-table-screenshot {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+    /* Reduced margin */
+    font-size: 0.9em;
+    border-radius: 15px;
+    /* Slightly smaller font in table */
+}
+
+.job-table-screenshot th,
+.job-table-screenshot td {
+    border: 1px solid #ddd;
+    /* Lighter border */
+    padding: 10px 8px;
+    /* Adjust padding */
+    text-align: left;
+    vertical-align: top;
+}
+
+.job-table-screenshot th {
+    background-color: #f9f9f9;
+    /* Very light grey header */
+    font-weight: bold;
+    white-space: nowrap;
+    /* Prevent headers wrapping */
+}
+
+.job-table-screenshot tbody tr:nth-child(even) {
+    background-color: #fdfdfd;
+    /* Optional subtle striping */
+}
+
+.job-table-screenshot tbody tr:hover {
+    background-color: #f1f1f1;
+    /* Hover effect */
+}
+
+.job-table-screenshot td a {
+    color: #337ab7;
+    /* Standard link blue */
+    text-decoration: none;
+}
+
+.job-table-screenshot td a:hover {
+    text-decoration: underline;
+}
+
+
+/* No Jobs Message */
+
+.no-jobs {
+    color: #666;
+    font-style: italic;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px dashed #ddd;
+}
+
+
+/* Footer Info */
+
+.footer-info {
+    margin-top: 30px;
+    font-size: 0.8em;
+    color: #888;
+    text-align: right;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+
+/* Back to Top Button */
+
+.back-to-top-screenshot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #5cb85c;
+    /* Green color from screenshot */
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1.2em;
+    display: none;
+    /* Hidden by default */
+    z-index: 100;
+    transition: opacity 0.3s ease;
+}
+
+.back-to-top-screenshot.active {
+    display: block;
+    /* Show when active */
+}
+
+
+/* --- Placeholder Styles (already in <style> block in HTML, keep or move here) --- */
+
+.breadcrumb-placeholder {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.tabs-container {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+.tab {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background-color: #f8f8f8;
+    color: #337ab7;
+    cursor: pointer;
+    margin-right: 3px;
+    margin-bottom: -1px;
+    border-radius: 4px 4px 0 0;
+}
+
+.tab.active {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+    color: #333;
+    font-weight: bold;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+/* Added wrap */
+
+.pagination-links button,
+.pagination-links span {
+    display: inline-block;
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin: 0 2px;
+    cursor: pointer;
+}
+
+.pagination-links button:disabled {
+    background-color: #eee;
+    cursor: default;
+    border-color: #ddd;
+}
+
+.pagination-links span.current-page {
+    font-weight: bold;
+    background-color: #eee;
+}
+
+.results-count span {
+    margin-right: 5px;
+}
+
+.results-count select {
+    padding: 4px;
+    border: 1px solid #ccc;
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= job.job_title %> - UMP Job Connect</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">UMP Job Connect</a>
+      <ul>
+        <% if (user) { %>
+          <% if (userType === 'student') { %>
+            <li><a href="/students/dashboard">Dashboard</a></li>
+            <li><a href="/jobs">Browse Jobs</a></li>
+            <li><a href="/students/profile">Profile</a></li>
+          <% } else if (userType === 'faculty') { %>
+            <li><a href="/faculty/dashboard">Dashboard</a></li>
+            <li><a href="/faculty/jobs/create">Post Job</a></li>
+            <li><a href="/faculty/profile">Profile</a></li>
+          <% } %>
+          <li><a href="/auth/logout">Logout</a></li>
+        <% } else { %>
+          <li><a href="/">Home</a></li>
+          <li><a href="/jobs">Browse Jobs</a></li>
+          <li><a href="/auth/login">Login</a></li>
+          <li><a href="/auth/register">Register</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="card" style="max-width: 900px; margin: 2rem auto;">
+        <h1><%= job.job_title %></h1>
+
+        <div style="margin: 1.5rem 0; padding: 1rem; background-color: #f8f9fa; border-radius: 4px;">
+          <p><strong>Faculty:</strong> <%= job.faculty %></p>
+          <p><strong>Posted by:</strong> <%= job.first_name %> <%= job.last_name %></p>
+          <p><strong>Email:</strong> <%= job.email %></p>
+          <p><strong>Posted on:</strong> <%= new Date(job.date_posted).toLocaleDateString() %></p>
+          <p style="color: #e74c3c;"><strong>Application Deadline:</strong> <%= new Date(job.application_deadline).toLocaleDateString() %></p>
+        </div>
+
+        <div style="margin: 2rem 0;">
+          <h2>Job Description</h2>
+          <p style="white-space: pre-wrap;"><%= job.description %></p>
+        </div>
+
+        <div style="margin: 2rem 0;">
+          <h2>Requirements</h2>
+          <div style="white-space: pre-wrap;"><%= job.requirements %></div>
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #ddd;">
+          <% if (user && userType === 'student') { %>
+            <% if (hasApplied) { %>
+              <div class="alert alert-success">
+                ✓ You have already applied for this job. Check your dashboard for application status.
+              </div>
+              <a href="/students/dashboard" class="btn">View My Applications</a>
+            <% } else { %>
+              <% 
+                const currentDate = new Date().toISOString().split('T')[0];
+                const deadlinePassed = job.application_deadline < currentDate;
+              %>
+              <% if (deadlinePassed) { %>
+                <div class="alert alert-error">
+                  This job posting has closed. The application deadline has passed.
+                </div>
+              <% } else { %>
+                <form action="/applications/apply/<%= job.id %>" method="POST">
+                  <button type="submit" class="btn">Apply Now</button>
+                  <p style="margin-top: 1rem; font-size: 0.9rem; color: #7f8c8d;">
+                    Note: You must have a complete profile to apply for this job.
+                  </p>
+                </form>
+              <% } %>
+            <% } %>
+          <% } else if (!user) { %>
+            <div class="alert alert-info">
+              Please <a href="/auth/login">login</a> or <a href="/auth/register">register</a> as a student to apply for this job.
+            </div>
+          <% } %>
+
+          <a href="/jobs" class="btn btn-secondary" style="margin-left: 1rem;">Back to Jobs</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

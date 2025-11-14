@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - UMP Job Connect</title>
+
+    <!-- ==== CSS (same as template123) ==== -->
+    <link rel="stylesheet" href="/jobs/css/job-table-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+          integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/img/favicon.jpg" type="image/x-icon">
+     <link rel="stylesheet" href="/css/jobs_list.css">
+    <link rel="stylesheet" href="/css/home_page.css">
+
+    <!-- ==== Inline styles – identical to template123 ==== -->
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+        .breadcrumb-placeholder{font-size:.85em;color:#666;margin-bottom:15px;}
+        .tabs-container{border-bottom:1px solid #ccc;margin-bottom:15px;}
+        .tab{display:inline-block;padding:10px 15px;border:1px solid #ccc;border-bottom:none;
+            background:#f8f8f8;color:#337ab7;cursor:pointer;margin-right:3px;margin-bottom:-1px;
+            border-radius:4px 4px 0 0;}
+        .tab.active{background:#fff;border-bottom:1px solid #fff;color:#333;font-weight:bold;}
+        .page-wrapper{color:#333;padding:20px;}
+        .page-header{margin-bottom:20px;}
+        .dashboard-card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin-bottom:20px;}
+        .alert-warning{background:#fff3cd;color:#856404;padding:12px;border:1px solid #ffeaa7;border-radius:4px;margin-bottom:20px;}
+        .alert-success{background:#d4edda;color:#155724;padding:12px;border:1px solid #c3e6cb;border-radius:4px;margin-bottom:20px;}
+        .btn{margin-top:10px;display:inline-flex;align-items:center;gap:8px;}
+        .btn-small{font-size:0.85rem;padding:4px 8px;}
+        .status{padding:4px 8px;border-radius:4px;font-size:0.8rem;font-weight:600;}
+        .status-pending{background:#fff3cd;color:#856404;}
+        .status-accepted{background:#d4edda;color:#155724;}
+        .status-rejected{background:#f8d7da;color:#721c24;}
+        .status-withdrawn{background:#e2e3e5;color:#383d41;}
+        .footer-info{margin-top:30px;text-align:center;color:#666;font-size:.9em;}
+    </style>
+</head>
+
+<body>
+    <!-- ==================== HEADER (same as template123) ==================== -->
+    <header class="header" data-header>
+        <div class="container">
+            <a href="/" class="logo">
+                <ion-icon name="business-outline"></ion-icon><i class="fa-solid fa-briefcase"></i> UMP Job Connect
+            </a>
+
+            <nav class="navbar container" data-navbar>
+                <ul class="navbar-list">
+                    <li><a href="/" class="navbar-link" data-nav-link>Home</a></li>
+                    <li><a href="/AboutUs" class="navbar-link" data-nav-link>About Us</a></li>
+                    <li><a href="/ContactUs" class="navbar-link" data-nav-link>Contact Us</a></li>
+                    <li><a href="/jobs" class="navbar-link" data-nav-link>Jobs</a></li>
+                    <li><a href="/students/dashboard" class="navbar-link" data-nav-link style="color:hsl(194,100%,28%);">My Applications</a></li>
+                    <li><a href="/students/profile" class="navbar-link" data-nav-link>Profile</a></li>
+                </ul>
+            </nav>
+
+            <a href="/auth/logout" class="btn btn-secondary">Logout</a>
+
+            <button class="nav-toggle-btn" aria-label="Toggle menu" data-nav-toggler>
+                <ion-icon name="menu-outline" aria-hidden="true" class="menu-icon"></ion-icon>
+                <ion-icon name="close-outline" aria-hidden="true" class="close-icon"></ion-icon>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== HERO (same as template123) ==================== -->
+    <main>
+        <article class="article">
+            <section class="section hero" aria-label="hero">
+                <div class="container">
+                    <div class="hero-bg"><div class="hero-content"></div></div>
+                    <div class="hero-form-wrapper">
+                        <!-- <form class="hero-form" action="/jobs" method="GET"> -->
+                            <div class="hero-form" style="display: flex; align-items: center; justify-content: space-evenly;">
+                                <h2>Quick Stats</h2>
+                                <p><strong>Student no:</strong> <%= student.student_number %></p>
+                                <p><strong>Email:</strong> <%= student.email %></p>
+                                <p><strong>Total Applications:</strong> <%= applications.length %></p>
+                            </div>
+                        <!-- </form> -->
+                    </div>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <!-- ==================== DASHBOARD CONTENT (inside page-wrapper) ==================== -->
+    <div class="page-wrapper">
+
+        <!-- <div class="breadcrumb-placeholder">
+            <a href="/">Home</a> > <a href="/students/dashboard">Dashboard</a>
+        </div> -->
+
+        <div class="page-header">
+            <h1>Welcome, <%= student.first_name %>!</h1>
+        </div>
+
+        <!-- Profile Status Alert -->
+        <% if (!student.profile_complete) { %>
+            <div class="alert-warning">
+                Warning: Your profile is incomplete. Please <a href="/students/profile">complete your profile</a> to apply for jobs.
+            </div>
+        <% } else { %>
+            <div class="alert-success">
+                Check: Your profile is complete. You can now apply for jobs!
+            </div>
+        <% } %>
+
+        <!-- Applications Table -->
+        <div class="dashboard-card">
+            <h2>My Applications</h2>
+
+            <% if (applications.length === 0) { %>
+                <p>You haven't applied for any jobs yet. <a href="/jobs">Browse available jobs</a></p>
+            <% } else { %>
+                <div class="table-responsive">
+                    <table class="job-table-screenshot">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Faculty</th>
+                                <th>Applied Date</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% applications.forEach(app => { %>
+                                <tr>
+                                    <td><a href="/jobs/<%= app.job_post_id %>"><%= app.job_title %></a></td>
+                                    <td><%= app.faculty %></td>
+                                    <td><%= new Date(app.applied_at).toLocaleDateString() %></td>
+                                    <td><%= new Date(app.application_deadline).toLocaleDateString() %></td>
+                                    <td>
+                                        <span class="status status-<%= app.status %>">
+                                            <%= app.status.charAt(0).toUpperCase() + app.status.slice(1) %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <% if (app.status === 'pending') { %>
+                                            <form action="/applications/withdraw/<%= app.id %>" method="POST"
+                                                  style="display:inline;"
+                                                  onsubmit="return confirm('Are you sure you want to withdraw this application?')">
+                                                <button type="submit" class="btn btn-danger btn-small">Withdraw</button>
+                                            </form>
+                                        <% } else { %>
+                                            <span style="color:#888;">—</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- CTA Button -->
+        <div style="text-align:center; margin-top:30px;">
+            <a href="/jobs" class="btn btn-primary"
+               style="font-size:1.1rem; padding:12px 24px;">
+                <i class="fa-solid fa-briefcase"></i> Browse Available Jobs
+            </a>
+        </div>
+
+        <!-- <div class="footer-info">
+            APP V7.40.1.3 <br>
+            Last updated: <%= new Date().toLocaleDateString() %> <%= new Date().toLocaleTimeString() %>
+        </div> -->
+    </div>
+
+    <!-- ==================== FOOTER (same as template123) ==================== -->
+
+    <a href="#" class="back-to-top-screenshot" aria-label="Back to top">Up Arrow</a>
+
+    <!-- Scripts -->
+    <script src="/home/assets/js/script.js" defer></script>
+    <script src="/jobs/js/job-table-script.js"></script>
+</body>
+</html>

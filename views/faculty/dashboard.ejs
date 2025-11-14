@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Dashboard - UMP Job Connect</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">UMP Job Connect</a>
+      <ul>
+        <li><a href="/faculty/dashboard">Dashboard</a></li>
+        <li><a href="/faculty/jobs/create">Post Job</a></li>
+        <li><a href="/faculty/profile">Profile</a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <h1>Faculty Dashboard</h1>
+
+      <div class="card">
+        <h2>My Posted Jobs</h2>
+
+        <% if (jobs.length === 0) { %>
+          <p>You haven't posted any jobs yet. <a href="/faculty/jobs/create">Create your first job post</a></p>
+        <% } else { %>
+          <div style="margin-bottom: 1rem;">
+            <a href="/faculty/jobs/create" class="btn">Post New Job</a>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Job Title</th>
+                <th>Faculty</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Applications</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% jobs.forEach(job => { %>
+                <tr>
+                  <td><%= job.job_title %></td>
+                  <td><%= job.faculty %></td>
+                  <td><%= new Date(job.application_deadline).toLocaleDateString() %></td>
+                  <td>
+                    <% if (job.is_active) { %>
+                      <span class="status status-accepted">Active</span>
+                    <% } else { %>
+                      <span class="status status-rejected">Inactive</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/faculty/jobs/<%= job.id %>/applicants" class="btn btn-small">View Applicants</a>
+                  </td>
+                  <td>
+                    <a href="/faculty/jobs/edit/<%= job.id %>" class="btn btn-secondary btn-small">Edit</a>
+                    <form action="/faculty/jobs/delete/<%= job.id %>" method="POST" style="display: inline;" 
+                          onsubmit="return confirm('Are you sure you want to delete this job post?')">
+                      <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Profile - UMP Job Connect</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">UMP Job Connect</a>
+      <ul>
+        <li><a href="/faculty/dashboard">Dashboard</a></li>
+        <li><a href="/faculty/jobs/create">Post Job</a></li>
+        <li><a href="/faculty/profile">Profile</a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <h1>My Profile</h1>
+
+      <div class="card">
+        <h2>Account Information</h2>
+        <p><strong>Staff Number:</strong> <%= faculty.staff_number %></p>
+        <p><strong>Email:</strong> <%= faculty.email %></p>
+      </div>
+
+      <div class="card">
+        <h2>Personal Information</h2>
+        <form action="/faculty/profile/update" method="POST">
+          <div class="form-group">
+            <label>First Name:</label>
+            <input type="text" name="first_name" value="<%= faculty.first_name %>" required>
+          </div>
+
+          <div class="form-group">
+            <label>Last Name:</label>
+            <input type="text" name="last_name" value="<%= faculty.last_name %>" required>
+          </div>
+
+          <div class="form-group">
+            <label>Faculty:</label>
+            <select name="faculty" required>
+              <option value="">Select Faculty</option>
+              <option value="Faculty of Agriculture and Environmental Sciences" 
+                      <%= faculty.faculty === 'Faculty of Agriculture and Environmental Sciences' ? 'selected' : '' %>>
+                Agriculture and Environmental Sciences
+              </option>
+              <option value="Faculty of Economics and Management Sciences"
+                      <%= faculty.faculty === 'Faculty of Economics and Management Sciences' ? 'selected' : '' %>>
+                Economics and Management Sciences
+              </option>
+              <option value="Faculty of Education"
+                      <%= faculty.faculty === 'Faculty of Education' ? 'selected' : '' %>>
+                Education
+              </option>
+              <option value="Faculty of Humanities"
+                      <%= faculty.faculty === 'Faculty of Humanities' ? 'selected' : '' %>>
+                Humanities
+              </option>
+              <option value="Faculty of Science and Technology"
+                      <%= faculty.faculty === 'Faculty of Science and Technology' ? 'selected' : '' %>>
+                Science and Technology
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Phone:</label>
+            <input type="tel" name="phone" value="<%= faculty.phone || '' %>">
+          </div>
+
+          <button type="submit" class="btn">Update Profile</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

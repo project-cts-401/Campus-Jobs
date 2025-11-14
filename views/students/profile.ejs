@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - UMP Job Connect</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">UMP Job Connect</a>
+      <ul>
+        <li><a href="/students/dashboard">Dashboard</a></li>
+        <li><a href="/jobs">Browse Jobs</a></li>
+        <li><a href="/students/profile">Profile</a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <h1>My Profile</h1>
+
+      <% if (!student.profile_complete) { %>
+        <div class="profile-incomplete" style="margin-bottom: 2rem;">
+          ⚠️ Complete all sections to apply for jobs
+        </div>
+      <% } else { %>
+        <div class="profile-complete" style="margin-bottom: 2rem;">
+          ✓ Profile complete!
+        </div>
+      <% } %>
+
+      <!-- Basic Information -->
+      <div class="card">
+        <h2>Basic Information</h2>
+        <p><strong>Student Number:</strong> <%= student.student_number %></p>
+        <p><strong>Name:</strong> <%= student.first_name %> <%= student.last_name %></p>
+        <p><strong>Email:</strong> <%= student.email %></p>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="card">
+        <h2>Contact Information</h2>
+        <form action="/students/profile/update" method="POST">
+          <div class="form-group">
+            <label>Phone Number:</label>
+            <input type="tel" name="phone" value="<%= student.phone || '' %>">
+          </div>
+
+          <div class="form-group">
+            <label>Emergency Contact Name:</label>
+            <input type="text" name="emergency_contact_name" value="<%= student.emergency_contact_name || '' %>">
+          </div>
+
+          <div class="form-group">
+            <label>Emergency Contact Phone:</label>
+            <input type="tel" name="emergency_contact_phone" value="<%= student.emergency_contact_phone || '' %>">
+          </div>
+
+          <div class="form-group">
+            <label>Emergency Contact Relationship:</label>
+            <input type="text" name="emergency_contact_relationship" 
+                   value="<%= student.emergency_contact_relationship || '' %>"
+                   placeholder="e.g., Parent, Guardian, Sibling">
+          </div>
+
+          <button type="submit" class="btn">Update Contact Information</button>
+        </form>
+      </div>
+
+      <!-- Document Uploads -->
+      <div class="card">
+        <h2>Required Documents (PDF only)</h2>
+        <form action="/students/profile/upload" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label>ID Document:</label>
+            <% if (student.id_document) { %>
+              <p>✓ Uploaded: <a href="/uploads/<%= student.id_document %>" target="_blank">View</a></p>
+            <% } %>
+            <input type="file" name="id_document" accept=".pdf">
+          </div>
+
+          <div class="form-group">
+            <label>Proof of Tax:</label>
+            <% if (student.proof_of_tax) { %>
+              <p>✓ Uploaded: <a href="/uploads/<%= student.proof_of_tax %>" target="_blank">View</a></p>
+            <% } %>
+            <input type="file" name="proof_of_tax" accept=".pdf">
+          </div>
+
+          <div class="form-group">
+            <label>Proof of Bank:</label>
+            <% if (student.proof_of_bank) { %>
+              <p>✓ Uploaded: <a href="/uploads/<%= student.proof_of_bank %>" target="_blank">View</a></p>
+            <% } %>
+            <input type="file" name="proof_of_bank" accept=".pdf">
+          </div>
+
+          <div class="form-group">
+            <label>Resume/CV:</label>
+            <% if (student.resume) { %>
+              <p>✓ Uploaded: <a href="/uploads/<%= student.resume %>" target="_blank">View</a></p>
+            <% } %>
+            <input type="file" name="resume" accept=".pdf">
+          </div>
+
+          <div class="form-group">
+            <label>Academic Transcript:</label>
+            <% if (student.academic_transcript) { %>
+              <p>✓ Uploaded: <a href="/uploads/<%= student.academic_transcript %>" target="_blank">View</a></p>
+            <% } %>
+            <input type="file" name="academic_transcript" accept=".pdf">
+          </div>
+
+          <button type="submit" class="btn">Upload Documents</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
