@@ -1,7 +1,7 @@
 // Make sure you have run 'npm install dotenv'
 require('dotenv').config();
 
-const API_KEY = process.env.GEMINI_API_KEY;
+const API_KEY = 'AIzaSyDiGbMn71PMaYJdeNm7_IIRIgH2Yil5m-E';
 
 // Brutal Honesty: You MUST use the exact model version specified here.
 // 'gemini-2.5-flash-preview-09-2025' supports the JSON schema enforcement we need.

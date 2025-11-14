@@ -118,7 +118,7 @@ router.get('/jobs/:id/applicants', isFaculty, (req, res) => {
         return res.status(404).send('Job not found');
       }
 
-      // Get all applications for this job with student details
+      // Get only qualified applicants
       db.all(`
         SELECT applications.*, students.student_number, students.first_name, 
                students.last_name, students.email, students.phone,
@@ -127,6 +127,7 @@ router.get('/jobs/:id/applicants', isFaculty, (req, res) => {
         FROM applications
         JOIN students ON applications.student_id = students.id
         WHERE applications.job_post_id = ?
+          AND applications.third_year_average >= 67
         ORDER BY applications.applied_at DESC
       `, [jobId], (err, applicants) => {
         if (err) {
@@ -137,6 +138,7 @@ router.get('/jobs/:id/applicants', isFaculty, (req, res) => {
     }
   );
 });
+
 
 // Update application status
 router.post('/applications/:id/status', isFaculty, (req, res) => {

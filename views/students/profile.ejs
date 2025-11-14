@@ -1,130 +1,606 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Profile - UMP Job Connect</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile – UMP Job Connect</title>
+
+  <!-- Google Fonts: Inter (clean, modern) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"/>
+
+  <style>
+    /* ========================================
+       MODERN CLEAN DESIGN SYSTEM
+       ======================================== */
+    :root {
+      --primary: #1a5f7a;
+      --primary-light: #e6f0f5;
+      --success: #10b981;
+      --danger: #ef4444;
+      --gray-100: #f8fafc;
+      --gray-200: #e2e8f0;
+      --gray-500: #64748b;
+      --gray-700: #334155;
+      --gray-900: #0f172a;
+      --white: #ffffff;
+      --radius: 16px;
+      --radius-sm: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --font: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font);
+      background: linear-gradient(135deg, #f8f9fa 0%, #f1f5f9 100%);
+      color: var(--gray-700);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* ========================================
+       HEADER
+       ======================================== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      
+    }
+
+    nav a {
+      color: var(--gray-700);
+      font-weight: 500;
+      font-size: 1rem;
+      transition: var(--transition);
+      position: relative;
+      text-decoration: none;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--primary);
+    }
+
+    .mobile-toggle {
+      display: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--gray-700);
+    }
+
+    /* ========================================
+       MAIN CONTENT
+       ======================================== */
+    main {
+      padding-top: 100px;
+      padding-bottom: 4rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      color: var(--gray-500);
+      font-size: 1.1rem;
+    }
+
+    /* Progress Ring */
+    .progress-ring {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .progress-ring circle {
+      fill: none;
+      stroke-width: 8;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    .progress-ring .bg {
+      stroke: var(--gray-200);
+    }
+
+    .progress-ring .fill {
+      stroke: var(--primary);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    /* Status Card */
+    .status-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      border: 1px solid var(--gray-200);
+    }
+
+    .status-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-complete { color: var(--success); }
+    .status-incomplete { color: var(--danger); }
+
+    /* Profile Cards */
+    .profile-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-200);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .card-header i {
+      color: var(--primary);
+      font-size: 1.6rem;
+    }
+
+    /* Form Styling */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      font-size: 0.95rem;
+    }
+
+    .required::after {
+      content: ' *';
+      color: var(--danger);
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      background: var(--white);
+      transition: var(--transition);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(26, 95, 122, 0.15);
+    }
+
+    /* File Upload (Drag & Drop) */
+    .file-drop-area {
+      border: 2px dashed var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      background: var(--primary-light);
+    }
+
+    .file-drop-area.dragover {
+      border-color: var(--primary);
+      background: rgba(26, 95, 122, 0.05);
+    }
+
+    .file-drop-area input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-info {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--gray-500);
+    }
+
+    .file-uploaded {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--success);
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+
+    .file-uploaded a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    /* Buttons */
+    .btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .btn:hover {
+      background: #144a63;
+      transform: translateY(-2px);
+    }
+
+    .btn-full {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--gray-900);
+      color: var(--gray-300);
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 0.9rem;
+      margin-top: 4rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-container { flex-wrap: wrap; }
+      nav ul { display: none; flex-direction: column; width: 100%; margin-top: 1rem; }
+      nav ul.show { display: flex; }
+      .mobile-toggle { display: block; }
+
+      .page-title { font-size: 2rem; }
+      .card { padding: 1.5rem; }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+  </style>
 </head>
 <body>
-  <nav>
-    <div class="container">
-      <a href="/" class="logo">UMP Job Connect</a>
-      <ul>
-        <li><a href="/students/dashboard">Dashboard</a></li>
-        <li><a href="/jobs">Browse Jobs</a></li>
-        <li><a href="/students/profile">Profile</a></li>
-        <li><a href="/auth/logout">Logout</a></li>
-      </ul>
-    </div>
-  </nav>
 
+  <!-- ==================== HEADER ==================== -->
+  <header>
+    <div class="container nav-container">
+      <a href="/" class="logo">
+        <i class="uil uil-graduation-cap"></i> UMP Job Connect
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/students/dashboard">Dashboard</a></li>
+          <li><a href="/jobs">Browse Jobs</a></li>
+          <li><a href="/students/profile" class="active">Profile</a></li>
+          <li><a href="/auth/logout">Logout</a></li>
+        </ul>
+        <div class="mobile-toggle">
+          <i class="uil uil-bars"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN ==================== -->
   <main>
     <div class="container">
-      <h1>My Profile</h1>
 
-      <% if (!student.profile_complete) { %>
-        <div class="profile-incomplete" style="margin-bottom: 2rem;">
-          ⚠️ Complete all sections to apply for jobs
-        </div>
-      <% } else { %>
-        <div class="profile-complete" style="margin-bottom: 2rem;">
-          ✓ Profile complete!
-        </div>
-      <% } %>
-
-      <!-- Basic Information -->
-      <div class="card">
-        <h2>Basic Information</h2>
-        <p><strong>Student Number:</strong> <%= student.student_number %></p>
-        <p><strong>Name:</strong> <%= student.first_name %> <%= student.last_name %></p>
-        <p><strong>Email:</strong> <%= student.email %></p>
+      <!-- Header -->
+      <div class="page-header">
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-subtitle">Keep your information up to date to apply for jobs</p>
       </div>
 
-      <!-- Contact Information -->
-      <div class="card">
-        <h2>Contact Information</h2>
-        <form action="/students/profile/update" method="POST">
-          <div class="form-group">
-            <label>Phone Number:</label>
-            <input type="tel" name="phone" value="<%= student.phone || '' %>">
-          </div>
-
-          <div class="form-group">
-            <label>Emergency Contact Name:</label>
-            <input type="text" name="emergency_contact_name" value="<%= student.emergency_contact_name || '' %>">
-          </div>
-
-          <div class="form-group">
-            <label>Emergency Contact Phone:</label>
-            <input type="tel" name="emergency_contact_phone" value="<%= student.emergency_contact_phone || '' %>">
-          </div>
-
-          <div class="form-group">
-            <label>Emergency Contact Relationship:</label>
-            <input type="text" name="emergency_contact_relationship" 
-                   value="<%= student.emergency_contact_relationship || '' %>"
-                   placeholder="e.g., Parent, Guardian, Sibling">
-          </div>
-
-          <button type="submit" class="btn">Update Contact Information</button>
-        </form>
+      <!-- Progress Ring -->
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div class="progress-ring" style="position: relative; width: 120px; height: 120px; margin: 0 auto;">
+          <svg width="120" height="120">
+            <circle class="bg" cx="60" cy="60" r="54"></circle>
+            <circle class="fill" cx="60" cy="60" r="54"
+                    stroke-dasharray="339.292" 
+                    stroke-dashoffset="<%= 339.292 - (339.292 * profileProgress / 100) %>"></circle>
+          </svg>
+          <div class="progress-text"><%= profileProgress %>%</div>
+        </div>
+        <p style="margin-top: 0.5rem; color: var(--gray-500);">
+          <%= profileProgress === 100 ? 'Profile complete!' : `${profileProgress}% complete` %>
+        </p>
       </div>
 
-      <!-- Document Uploads -->
-      <div class="card">
-        <h2>Required Documents (PDF only)</h2>
-        <form action="/students/profile/upload" method="POST" enctype="multipart/form-data">
-          <div class="form-group">
-            <label>ID Document:</label>
-            <% if (student.id_document) { %>
-              <p>✓ Uploaded: <a href="/uploads/<%= student.id_document %>" target="_blank">View</a></p>
-            <% } %>
-            <input type="file" name="id_document" accept=".pdf">
-          </div>
+      <!-- Status Card -->
+      <div class="status-card">
+        <!-- <div class="status-icon <%= student.profile_complete ? 'status-complete' : 'status-incomplete' %>">
+          <%= student.profile_complete ? '<i class="uil uil-check-circle"></i>' : '<i class="uil uil-exclamation-circle"></i>' %>
+        </div> -->
+        <p style="font-weight: 600; font-size: 1.1rem;">
+          <%= student.profile_complete 
+            ? 'Your profile is complete and ready!' 
+            : 'Complete all required fields to apply for jobs' %>
+        </p>
+      </div>
 
-          <div class="form-group">
-            <label>Proof of Tax:</label>
-            <% if (student.proof_of_tax) { %>
-              <p>✓ Uploaded: <a href="/uploads/<%= student.proof_of_tax %>" target="_blank">View</a></p>
-            <% } %>
-            <input type="file" name="proof_of_tax" accept=".pdf">
-          </div>
+      <!-- Profile Grid -->
+      <div class="profile-grid">
 
-          <div class="form-group">
-            <label>Proof of Bank:</label>
-            <% if (student.proof_of_bank) { %>
-              <p>✓ Uploaded: <a href="/uploads/<%= student.proof_of_bank %>" target="_blank">View</a></p>
-            <% } %>
-            <input type="file" name="proof_of_bank" accept=".pdf">
+        <!-- Basic Info -->
+        <div class="card">
+          <div class="card-header">
+            <i class="uil uil-user"></i>
+            <span>Basic Information</span>
           </div>
-
-          <div class="form-group">
-            <label>Resume/CV:</label>
-            <% if (student.resume) { %>
-              <p>✓ Uploaded: <a href="/uploads/<%= student.resume %>" target="_blank">View</a></p>
-            <% } %>
-            <input type="file" name="resume" accept=".pdf">
+          <div style="display: grid; gap: 0.75rem; font-size: 1rem;">
+            <p><strong>Student Number:</strong> <%= student.student_number %></p>
+            <p><strong>Name:</strong> <%= student.first_name %> <%= student.last_name %></p>
+            <p><strong>Email:</strong> <%= student.email %></p>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label>Academic Transcript:</label>
-            <% if (student.academic_transcript) { %>
-              <p>✓ Uploaded: <a href="/uploads/<%= student.academic_transcript %>" target="_blank">View</a></p>
-            <% } %>
-            <input type="file" name="academic_transcript" accept=".pdf">
+        <!-- Contact Info -->
+        <div class="card">
+          <div class="card-header">
+            <i class="uil uil-phone"></i>
+            <span>Contact Information</span>
           </div>
+          <form action="/students/profile/update" method="POST">
+            <div class="form-group">
+              <label class="required">Phone Number</label>
+              <input type="tel" name="phone" value="<%= student.phone || '' %>" placeholder="e.g. 082 123 4567" required>
+            </div>
+            <div class="form-group">
+              <label>Emergency Contact Name</label>
+              <input type="text" name="emergency_contact_name" value="<%= student.emergency_contact_name || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Emergency Contact Phone</label>
+              <input type="tel" name="emergency_contact_phone" value="<%= student.emergency_contact_phone || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Relationship</label>
+              <input type="text" name="emergency_contact_relationship" value="<%= student.emergency_contact_relationship || '' %>" placeholder="e.g. Parent">
+            </div>
+            <button type="submit" class="btn btn-full">
+              <i class="uil uil-save"></i> Save Contact
+            </button>
+          </form>
+        </div>
 
-          <button type="submit" class="btn">Upload Documents</button>
-        </form>
+        <!-- Documents -->
+        <div class="card">
+          <div class="card-header">
+            <i class="uil uil-file-upload"></i>
+            <span>Required Documents</span>
+          </div>
+          <form action="/students/profile/upload" method="POST" enctype="multipart/form-data">
+            <% 
+              const docs = [
+                { label: 'ID Document', field: 'id_document' },
+                { label: 'Proof of Tax', field: 'proof_of_tax' },
+                { label: 'Proof of Bank', field: 'proof_of_bank' },
+                { label: 'Resume/CV', field: 'resume' },
+                { label: 'Academic Transcript', field: 'academic_transcript' }
+              ];
+            %>
+            <% docs.forEach(doc => { %>
+              <div class="form-group">
+                <label class="<%= !student[doc.field] ? 'required' : '' %>"><%= doc.label %></label>
+                <% if (student[doc.field]) { %>
+                  <div class="file-uploaded">
+                    <i class="uil uil-check-circle"></i>
+                    Uploaded: <a href="/uploads/<%= student[doc.field] %>" target="_blank">View PDF</a>
+                  </div>
+                <% } %>
+                <div class="file-drop-area" data-field="<%= doc.field %>">
+                  <input type="file" name="<%= doc.field %>" accept=".pdf">
+                  <i class="uil uil-cloud-upload" style="font-size: 2rem; color: var(--primary);"></i>
+                  <p style="margin: 0.5rem 0 0; font-weight: 500;">
+                    <%= student[doc.field] ? 'Replace file' : 'Drop PDF here or click to upload' %>
+                  </p>
+                  <p class="file-info">Max 5MB • PDF only</p>
+                </div>
+              </div>
+            <% }); %>
+            <button type="submit" class="btn btn-full">
+              <i class="uil uil-upload"></i> Upload Files
+            </button>
+          </form>
+        </div>
+
       </div>
     </div>
   </main>
 
+  <!-- ==================== FOOTER ==================== -->
   <footer>
     <div class="container">
-      <p>&copy; 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
+      <p>© 2025 University of Mpumalanga Job Connect. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- ==================== JS ==================== -->
+  <script>
+    // Mobile menu
+    const toggle = document.querySelector('.mobile-toggle');
+    const navUl = document.querySelector('nav ul');
+    toggle.addEventListener('click', () => {
+      navUl.classList.toggle('show');
+      toggle.innerHTML = navUl.classList.contains('show') 
+        ? '<i class="uil uil-times"></i>' 
+        : '<i class="uil uil-bars"></i>';
+    });
+
+    // File drag & drop
+    document.querySelectorAll('.file-drop-area').forEach(area => {
+      const input = area.querySelector('input[type="file"]');
+      
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        area.addEventListener(eventName, preventDefaults, false);
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        area.addEventListener(eventName, () => area.classList.add('dragover'), false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        area.addEventListener(eventName, () => area.classList.remove('dragover'), false);
+      });
+
+      area.addEventListener('drop', e => {
+        const files = e.dataTransfer.files;
+        if (files.length) input.files = files;
+        updateFileName(area, files[0]?.name);
+      });
+
+      input.addEventListener('change', () => {
+        updateFileName(area, input.files[0]?.name);
+      });
+    });
+
+    function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+    function updateFileName(area, name) {
+      const text = area.querySelector('p');
+      if (name) {
+        text.innerHTML = `<strong>${name}</strong> selected`;
+      }
+    }
+
+    // Auto-hide status after 8s
+    setTimeout(() => {
+      const status = document.querySelector('.status-card');
+      if (status && status.textContent.includes('complete')) {
+        status.style.opacity = '0.7';
+        status.style.transition = 'opacity 0.5s';
+      }
+    }, 8000);
+  </script>
 </body>
 </html>

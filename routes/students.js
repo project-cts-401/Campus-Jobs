@@ -72,9 +72,49 @@ router.get('/profile', isStudent, (req, res) => {
 
   db.get('SELECT * FROM students WHERE id = ?', [studentId], (err, student) => {
     if (err) {
+      console.error('DB Error:', err);
       return res.status(500).send('Error loading profile');
     }
-    res.render('students/profile', { student, message: null });
+
+    if (!student) {
+      return res.status(404).send('Student not found');
+    }
+
+    // === Calculate Profile Completion Progress ===
+    const requiredFields = [
+      'first_name',
+      'last_name',
+      'email',
+      'student_number',
+      'phone',
+      'emergency_contact_name',
+      'emergency_contact_phone',
+      'emergency_contact_relationship',
+      'id_document',
+      'proof_of_tax',
+      'proof_of_bank',
+      'resume',
+      'academic_transcript'
+    ];
+
+    const filledCount = requiredFields.filter(field => 
+      student[field] && student[field].toString().trim() !== ''
+    ).length;
+
+    const profileProgress = Math.round((filledCount / requiredFields.length) * 100);
+
+    // Optional: Auto-set profile_complete flag (if you store it in DB)
+    const profile_complete = profileProgress === 100;
+
+    // Optional: Update DB (uncomment if you have the column)
+    // db.run('UPDATE students SET profile_complete = ? WHERE id = ?', [profile_complete, studentId]);
+
+    // === Render Template ===
+    res.render('students/profile', {
+      student,
+      profileProgress,
+      message: null
+    });
   });
 });
 
